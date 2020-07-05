@@ -1,7 +1,7 @@
 
 <html>
 <head>
-<title>Counter Test App</title>
+<title>Chirper</title>
 
 <!-- jQuery -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
@@ -22,8 +22,9 @@
 
 
 <script>
-const ChirperData = {
+const chirperData = {
   "contractName": "Chirper",
+  "address": '0xbD12021A17DA08494D45eF8246C6EFFA8700B18b',
   "abi": [
     {
       "anonymous": false,
@@ -608,12 +609,29 @@ const ChirperData = {
 var myApp = angular.module("myApp", [])
 var scope
 
+
+
 myApp.controller("myCtrl", function($scope) {
 	// Make $scope available outside the controller
 	scope = $scope;
 
 	$scope.newMsg = "Hello";
 	$scope.messages = [];
+
+	$scope.sendMsg = async msg => {
+		if (!$scope.provider)
+			$scope.provider = await new ethers.providers.Web3Provider(window.ethereum)
+		
+		if (!$scope.contract)
+			$scope.contract = await new ethers.Contract(
+				chirperData.address, 
+				chirperData.abi, 
+				$scope.provider.getSigner())
+
+		await $scope.contract.chirp(msg);
+
+		alert(msg);
+	};  // $scope.sendMsg
 })  // myApp.controller
 
 </script>
@@ -623,6 +641,32 @@ myApp.controller("myCtrl", function($scope) {
 
 <body ng-app="myApp" ng-controller="myCtrl">
 <h2>Chirper</h2>
-{{newMsg}}
+
+
+<div class="panel panel-primary">
+	<div class="panel-heading">
+      		<h3 class="panel-title">Chirp a Message</h3>
+        </div>
+       	<div class="panel-body">
+		<input type="text" class="form-control" ng-model="newMsg">
+		</br>
+		<button class="btn btn-primary" ng-click="sendMsg(newMsg)">
+			Chirp
+		</button>
+	</div>
+</div>   <!-- panel-primary user message -->
+
+
+
+<div class="panel panel-info">
+	<div class="panel-heading">
+      		<h3 class="panel-title">Latest Messages</h3>
+        </div>
+       	<div class="panel-body">
+		Messages go here
+	</div>
+</div>   <!-- panel-info messages -->
+
+
 </body>
 </html>
