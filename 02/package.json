@@ -1,0 +1,19 @@
+{
+  "name": "Chirper",
+  "version": "0.0.1",
+  "description": "The initial version",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@opengsn/gsn": "^0.10.0",
+    "@truffle/hdwallet-provider": "^1.0.37",
+    "truffle-hdwallet-provider": "^1.0.17"
+  }
+}
