@@ -1,3 +1,10 @@
+const blockchain = "localhost"
+const gsn = require('@opengsn/gsn')
+const RelayProvider = require("@opengsn/gsn/dist/src/relayclient/").RelayProvider
+const gsnTestEnv = require('@opengsn/gsn/dist/GsnTestEnvironment').default
+const configureGSN = require('@opengsn/gsn/dist/src/relayclient/GSNConfigurator').
+	configureGSN
+
 const Chirper = artifacts.require("Chirper");
 const ChirperPaymaster = artifacts.require("ChirperPaymaster");
 
