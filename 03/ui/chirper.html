@@ -28,7 +28,7 @@
 
 var myApp = angular.module("myApp", [])
 var scope
-var lookBack = 1000   // number of blocks to look back from chirps
+var lookBack = 100000   // number of blocks to look back from chirps
 
 
 myApp.controller("myCtrl", function($scope) {
@@ -37,6 +37,7 @@ myApp.controller("myCtrl", function($scope) {
 
 	$scope.newMsg = ""
 	$scope.messages = []
+	$scope.filter = ""
 
 	$scope.sendMsg = async msg => await window.app.sendMsg(msg)
 	$scope.sendFreeMsg = async msg => await window.app.sendFreeMsg(msg)
@@ -44,6 +45,13 @@ myApp.controller("myCtrl", function($scope) {
 	// No need for the value, this is just a way to 
 	// run an async function from within a normal one
 	var valueIrrelevant = window.app.listenChirps($scope)
+
+	$scope.filteredMessages = $scope.messages
+
+	$scope.$watch('filter', () =>
+		$scope.filteredMessages = $scope.filter === "" ? $scope.messages : 
+			$scope.messages.filter(msg => msg.message.search($scope.filter) != -1)
+	)    // $scope.$watch('filter' ...)
 
 })  // myApp.controller
 
@@ -75,14 +83,15 @@ myApp.controller("myCtrl", function($scope) {
 </div>   <!-- panel-primary user message -->
 
 
-
 <div class="panel panel-info">
 	<div class="panel-heading">
       		<h3 class="panel-title">Latest Messages</h3>
         </div>
        	<div class="panel-body">
+		<input type="text" class="form-control" ng-model="filter">
+		</br>
 		<ul class="list-group">
-			<li class="list-group-item" ng-repeat="msg in messages">
+			<li class="list-group-item" ng-repeat="msg in filteredMessages">
 				<a href="https://kovan.etherscan.io/address/{{msg.sender}}"
 				   target="_blank">{{msg.sender}}</a>:
 				<a href="https://kovan.etherscan.io/tx/{{msg.txn}}"
